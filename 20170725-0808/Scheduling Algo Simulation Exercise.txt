@@ -1,0 +1,10 @@
+Write down a scheduler using OOPs and simulate the following shceduling algorithms:
+1.	First Come First Serve
+2.	Shortest Job First
+3.	Shortest Remaining Time First/Next
+4.	Round Robin
+5.	Static Priority
+6.	Dynamic Priority
+7.	Highest Response Ratio
+
+Use one of these simulations on Files as Processes where file size shall be counted as Service Time
