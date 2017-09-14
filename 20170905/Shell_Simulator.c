@@ -114,7 +114,8 @@ void create_history_file() //function definition to create the file...
 
 void welcome() //function definition to display the welcome message of this shell
 {
-	printf("\t\t\t\t" BBLK KGRN " Hi BOSS " KNRM "\n"); //welcome message
+	//welcome message
+	printf("\t\t\t\t" BBLK KGRN " Hi BOSS " KNRM "\n");
 	printf("\t\t" BBLK KYEL " This Shell has some limited commands support!! " KNRM "\n");
 	printf("\t" BBLK KYEL " Some good features implemented can be used as follows: \t" KNRM "\n");
 	printf("\t" BBLK KYEL " 1. history :" KWHT "to see all commands in history\t\t\t"KNRM"\n");
@@ -128,105 +129,98 @@ void prompt() //function definition to display a prompt
 	printf(" " TEXT_BOLD KCYN "@ UR SERVICE :" KNRM TEXT_ATTR_OFF " "); //the prompt message
 }
 
-int history(char c_line[],char *argv[])
+int history(char c_line[],char *argv[]) //function definition to implement history feature
 {
-	int return_flag=0;
-	COMMAND_LOG=fopen(file_name,"r");
-	if(c_line[0]=='!')
+	int return_flag=0; //return flag by default 0
+	COMMAND_LOG=fopen(file_name,"r"); //opening the History file in read mode
+	if(c_line[0]=='!') //if the input starts with !...
 	{
-		history_mode=1;
-		int n=0,i=1;
-		while(c_line[i]==' ')
-			i++;
-		while(isdigit(c_line[i]))
+		history_mode=1; //enable the history mode flag so that this command doesn't get stored in history again
+		int n=0,i=1; //n for the number and i for the position
+		while(c_line[i]==' ') //if the current character is ' ' ...
+			i++; //skip the position
+		while(isdigit(c_line[i])) //till it reads digits...
 		{
-			n=n*10+(int)(c_line[i]-'0');
+			n=n*10+(int)(c_line[i]-'0'); //convert it to a number
 			i++;
 		}
-		if(c_line[i]!='\0')
-			n=0;
-		if(c_line[1]=='!')
-			n=1;
-		if(n)
+		if(c_line[i]!='\0') //if its not the end of string
+			n=0; //not a valid number
+		if(c_line[1]=='!') //if second character is !...
+			n=1; //set n as 1
+		if(n) //if n is not 0...
 		{
-			fseek(COMMAND_LOG,0,SEEK_END);
-			if(ftell(COMMAND_LOG)<(n*sizeof(cmd_log)))
-				printf("\t\t\t" BRED KWHT " Not that much records in History " KNRM "\n");
-			else
+			fseek(COMMAND_LOG,0,SEEK_END); //setting the read pointer to the end
+			if(ftell(COMMAND_LOG)<(n*sizeof(cmd_log))) //if there are less than n records...
+				printf("\t\t\t" BRED KWHT " Not that much records in History " KNRM "\n"); //show this error
+			else //else execute the n-th last command from history ...
 			{
-				fseek(COMMAND_LOG,-n*sizeof(cmd_log),SEEK_END);
-				if(fread(&cmd_log,sizeof(cmd_log),1,COMMAND_LOG)==1)
+				fseek(COMMAND_LOG,-n*sizeof(cmd_log),SEEK_END); //set the read-write pointer to starting of n-th last record
+				if(fread(&cmd_log,sizeof(cmd_log),1,COMMAND_LOG)==1) //if a record is successfully read...
 				{
-					printf(KGRN TEXT_BOLD);
-					puts(cmd_log.command);
-					printf(KNRM TEXT_ATTR_OFF "\n");
+					printf(KGRN TEXT_BOLD "%s" KNRM TEXT_ATTR_OFF "\n",cmd_log.command); //print the line of command read
 					parse(cmd_log.command,argv); //parse the line of command
-					execute(argv); //otherwise, execute the command
+					execute(argv); //execute the line of command
 				}
 			}
 		}
-		else
-			printf("\t\t\t" BRED KWHT " Not a valid History Access " KNRM "\n");
-		return_flag=1;
+		else //if n is 0...
+			printf("\t\t\t" BRED KWHT " Not a valid History Access " KNRM "\n"); //Not correct form to access History feature
+		return_flag=1; //set return flag as 1
 	}
 	else
-		if(strcmp(c_line,"history")==0)
+		if(strcmp(c_line,"history")==0) //else if the input is history...
 		{
-			fseek(COMMAND_LOG,0,SEEK_END);
-			if(ftell(COMMAND_LOG)==0)
-				printf("\t\t\t" BRED KWHT " NO RECORD OF COMMANDS IN THE HISTORY " KNRM "\n");
+			fseek(COMMAND_LOG,0,SEEK_END); //setting the read pointer to the end
+			if(ftell(COMMAND_LOG)==0) //if the History file is empty
+				printf("\t\t\t" BRED KWHT " NO RECORD OF COMMANDS IN THE HISTORY " KNRM "\n"); //give this error message
 			else
 			{
-				printf(TEXT_BOLD BWHT KBLK " ID " KNRM);
-				printf("    " TEXT_BOLD BWHT KBLK " COMMAND " TEXT_ATTR_OFF KNRM "\n");
-				fseek(COMMAND_LOG,0,SEEK_SET);
-				while(fread(&cmd_log,sizeof(cmd_log),1,COMMAND_LOG)==1)
-				{
-					printf(KCYN "%d\t",cmd_log.id);
-					printf(KYEL "%s\n",cmd_log.command);
-				}
-				printf(KNRM);
+				printf(TEXT_BOLD BWHT KBLK " ID " KNRM "    " TEXT_BOLD BWHT KBLK " COMMAND " TEXT_ATTR_OFF KNRM "\n"); //title for understanding the output
+				fseek(COMMAND_LOG,0,SEEK_SET); //setting the read pointer to the start of the file
+				while(fread(&cmd_log,sizeof(cmd_log),1,COMMAND_LOG)==1) //till the records are successfully read or end of file...
+					printf(KCYN "%d\t" KYEL "%s" KNRM "\n",cmd_log.id,cmd_log.command); //print the id of command read and the command from history
 			}
-			return_flag=1;
+			return_flag=1; //set return flag as 1
 		}
 		else
-			if(strncmp(c_line,"last",4)==0)
+			if(strncmp(c_line,"last",4)==0) //if the command is for last n commands
 			{
-				history_mode=1;
-				int n=0,i=4;
-				while(c_line[i]==' ')
-					i++;
-				while(isdigit(c_line[i]))
+				history_mode=1; //enable the history mode flag so that this command doesn't get stored in history again
+				int n=0,i=4; //n for the number and i for the position
+				while(c_line[i]==' ') //if the current character is ' ' ...
+					i++; //skip the position
+				while(isdigit(c_line[i])) //till it reads digits...
 				{
-					n=n*10+(int)(c_line[i]-'0');
+					n=n*10+(int)(c_line[i]-'0'); //convert it to a number
 					i++;
 				}
-				if(c_line[i]!='\0')
-					n=0;
-				if(n)
+				if(c_line[i]!='\0') //if its not the end of string
+					n=0; //not a valid number
+				if(c_line[4]=='\0') //if its only 'last'...
+					n=1; //set n as 1
+				if(n) //if n is not 0...
 				{
-					fseek(COMMAND_LOG,0,SEEK_END);
-					if(ftell(COMMAND_LOG)<(n*sizeof(cmd_log)))
-						printf("\t\t\t" BRED KWHT " Not that much records in History " KNRM "\n");
-					else
+					fseek(COMMAND_LOG,0,SEEK_END); //setting the read pointer to the end
+					if(ftell(COMMAND_LOG)<(n*sizeof(cmd_log))) //if there are less than n records...
+						printf("\t\t\t" BRED KWHT " Not that much records in History " KNRM "\n"); //show this error
+					else //else execute the last n commands from history ...
 					{
-						fseek(COMMAND_LOG,-n*sizeof(cmd_log),SEEK_END);
-						while(fread(&cmd_log,sizeof(cmd_log),1,COMMAND_LOG)==1)
+						fseek(COMMAND_LOG,-n*sizeof(cmd_log),SEEK_END); //set the read-write pointer to starting of n-th last record
+						while(fread(&cmd_log,sizeof(cmd_log),1,COMMAND_LOG)==1) //while a records are successfully being read or not end of file...
 						{
-							printf(KGRN TEXT_BOLD);
-							puts(cmd_log.command);
-							printf(KNRM TEXT_ATTR_OFF "\n");
+							printf(KGRN TEXT_BOLD "%s" KNRM TEXT_ATTR_OFF "\n",cmd_log.command); //print the line of command read
 							parse(cmd_log.command,argv); //parse the line of command
-							execute(argv); //otherwise, execute the command	
+							execute(argv); //execute the line of command
 						}
 					}
 				}
-				else
-					printf("\t\t\t" BRED KWHT " Not a valid History Access You might have missed the number " KNRM "\n");
-				return_flag=1;
+				else //if n is 0...
+					printf("\t\t\t" BRED KWHT " Not a valid History Access You might have missed the number " KNRM "\n"); //Not correct form to access History feature
+				return_flag=1; //set return flag as 1
 			}
-	fclose(COMMAND_LOG);
-	return return_flag;
+	fclose(COMMAND_LOG); //closing the history file
+	return return_flag; //returning the flag
 }
 
 void main(void) //main module
