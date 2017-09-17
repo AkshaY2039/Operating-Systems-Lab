@@ -1,3 +1,4 @@
+//Auto generated input
 #include <iostream>
 #include <cstdlib>
 #include <ctime>

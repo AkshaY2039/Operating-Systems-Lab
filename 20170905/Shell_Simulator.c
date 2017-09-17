@@ -1,3 +1,4 @@
+//A Shell Simulator in C and implemented history function in it.
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>

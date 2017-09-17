@@ -1,19 +1,20 @@
-// Odd and Even Series generation in Parent Child Setup
+// Fibonacci and prime Series generation in Parent Child Setup
 #include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <sys/wait.h>
 
-int main()
+int main() //main module
 {
 	int a=0,b=1,n=a+b,iend;
 	printf("Enter the number of terms of Fibonacci & Prime Sequence to generate:\n");
-	scanf("%d",&iend);
-	pid_t pid = fork();
-	if (pid == 0)
+	scanf("%d",&iend); //getting the length of series
+	pid_t pid=fork();
+	if(pid==0) //for child process...
 	{
     	printf("Child is making the Fibonacci Series\n");
     	printf("First %d Fibonacci Terms are :\n",iend);
+        //generate Fibonacci series
         if(iend>=2)
     		printf("0 %d ",n);
     	else
@@ -28,13 +29,13 @@ int main()
     	}
     	printf("\nChild ends\n");
 	}
-    else 
+    else //for parent process...
     {
         printf("Parent is waiting for child to complete...\n");
         wait(0);
         printf("Now parent generating Prime numbers\n");
         int i=3, count, c;
- 
+        //generate prime numbers
         if(iend>=1)
         {
             printf("First %d prime numbers are :\n",iend);

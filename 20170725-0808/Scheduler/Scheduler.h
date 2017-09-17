@@ -1,3 +1,4 @@
+//The Scheduler Header File containing the Scheduler Class
 class Scheduler
 {
 	int Number_of_Processes,Process_ID[20],Arrival_Time[20],Service_Time[20],Completion_Time[20],Turn_Around_Time[20],Wait_Time[20];

@@ -1,3 +1,4 @@
+//Static Priority (NPE)
 #include <iostream>
 #include <climits>
 #include <ctime>

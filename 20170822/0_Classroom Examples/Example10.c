@@ -1,24 +1,14 @@
+// Example 10 for forking one after another and understanding how the PC relation is built
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
 
-int main()
+int main() // main module
 {
 	printf("Hello 1\n");
-	fork();
+	fork(); // fork1
 	printf("Hello 2\n");
-	fork();
+	fork(); // fork2
 	printf("Hello 3\n");
 	return 0;
 }
-
-/*in all 4 processes and the output is:
-since maybe by default parent doesn't wait for child here.
-Hello 1
-Hello 2
-Hello 2
-Hello 3
-Hello 3
-Hello 3
-Hello 3
-*/

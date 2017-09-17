@@ -1,46 +1,36 @@
+// Example 14 for forking in cpp and understanding how global and local variable are treated
 #include <iostream>
 #include <string>
-
-// Required by for routine
-#include <sys/types.h>
+#include <sys/types.h> //required for fork routine
 #include <unistd.h>
-
-#include <stdlib.h>   // Declaration for exit()
+#include <stdlib.h>   //header for exit()
 
 using namespace std;
 
-int globalVariable = 2;
+int globalVariable=2; //global variable
 
-main()
+int main() //main module
 {
-   string sIdentifier;
-   int    iStackVariable = 20;
+	string sIdentifier; //string variable for identifying the process
+	int iStackVariable=20; //local variable to main
 
-   pid_t pID = fork();
-   if (pID == 0)                // child
-   {
-      // Code only executed by child process
-
-      sIdentifier = "Child Process: ";
-      globalVariable++;
-      iStackVariable++;
-    }
-    else if (pID < 0)            // failed to fork
-    {
-        cerr << "Failed to fork" << endl;
-        exit(1);
-        // Throw exception
-    }
-    else                                   // parent
-    {
-      // Code only executed by parent process
-
-      sIdentifier = "Parent Process:";
-    }
-
-    // Code executed by both parent and child.
-  
-    cout << sIdentifier;
-    cout << " Global variable: " << globalVariable;
-    cout << " Stack variable: "  << iStackVariable << endl;
+	pid_t pID=fork(); //forking a new process
+	if(pID==0) //for child process...
+	{
+		sIdentifier="Child Process: ";
+		globalVariable++;iStackVariable++; //increment both variables by 1
+	}
+	else
+		if(pID<0)//failed fork...
+		{
+			cerr<<"Failed to fork"<<endl; //into the error file
+			exit(1);
+		}
+		else //for parent process...
+			sIdentifier="Parent Process:";
+	//common to both parent and child  
+	cout<<sIdentifier;
+	cout<<" Global variable: "<<globalVariable;
+	cout<<" Stack variable: "<<iStackVariable<<endl;
+	return 0;
 }

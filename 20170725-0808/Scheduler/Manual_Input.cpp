@@ -1,3 +1,4 @@
+//Manual input
 #include <iostream>
 #include "Scheduler.h"
 
