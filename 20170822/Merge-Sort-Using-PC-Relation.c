@@ -36,7 +36,7 @@ void merge(int arr[],int l,int m,int r) //Function definition for merging two su
 		arr[k++]=R[j++]; //copy each of them into the arr[]
 }
 
-void mergeSort(int arr[], int l, int r) //function definition to divide the array into to halves and merge recursively with sorting
+void mergeSort(int arr[],int l,int r) //function definition to divide the array into to halves and merge recursively with sorting
 {
 	if(l<r) //if the left index is smaller than right
 	{
@@ -81,8 +81,8 @@ int main() // main module
 	for(int i=0;i<arr_size;i++)
 		scanf("%d",&arr[i]);	
 
-    printf("Given array before sorting \n"); //printing the entered unsorted array
-    printArray(arr,arr_size);
+	printf("Given array before sorting \n"); //printing the entered unsorted array
+	printArray(arr,arr_size);
 
 	mergeSort(arr,0,arr_size-1); //calling the mergesort function
 

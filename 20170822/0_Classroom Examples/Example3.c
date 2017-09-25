@@ -19,7 +19,7 @@ int main() //main module
 		else
 			if(pid>0) //for parent process
 			{
-				wait(NULL); //wait for none
+				wait(NULL); //wait for child process
 				printf("IIITDM\n");
 			}
 	printf("Kancheepuram\n"); //common to all processes

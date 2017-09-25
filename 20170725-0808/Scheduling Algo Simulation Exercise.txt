@@ -1,10 +1,34 @@
 Write down a scheduler using OOPs and simulate the following shceduling algorithms:
-1.	First Come First Serve
-2.	Shortest Job First
-3.	Shortest Remaining Time First/Next
-4.	Round Robin
-5.	Static Priority
-6.	Dynamic Priority
-7.	Highest Response Ratio
+	[NPE ==> No stopping in between]
+	[PE ==> Stopping a process in between is allowed]
+1.	First Come First Serve (NPE)
+	-- The one who has least Arrival time gets to be sereved first.
+	-- If Arrival Time Clashes, resolution is done on Service Time (with the intention of not letting a smaller process wait longer)
+	-- Again if the Service Time also clashes, the resolution occurs on the basis of Process IDs which definitely will be unique
+2.	Shortest Job First (NPE)
+	-- Out of the till arrived processes, the one with the shortest Service Time is selected for running.
+	-- If two process have same Service Times, Arrival Times will be considered among the clashed (with the intention of minimising the wait time)
+	-- Again the final decision is based on Process IDs.
+3.	Shortest Remaining Time First/Next (PE)
+	-- Out of the til arrived processes, the one with the shortest Remaining Time (initially Service Time) is selected for running.
+	-- At the arrival of each new process (or maybe after each unit time), the RTs are updated and checked for the condition of minimal RT. if anything other than the current running process is having shorter RT, it gets to be processed while the current one gets to wait.
+	-- if RTs are in match, AT does the resolution and finally PIDs as usual
+4.	Round Robin (PE)
+	-- Time Slicing or Time Quantization comes into action.
+	-- Each process can continuously be in the execution phase for that limited Time Quanta (in case of the presence of any other process)
+	-- Ready Queue is matained on the basis of RT or AT or PID in a round fashion where current process will be put at the end
+	-- All resolutions happen according to the Ready Queue
+5.	Static Priority (NPE & PE seperately)
+	-- NPE Static Priority is where every process gets a priority and the higher priority process goes for execution.
+	-- Even if a process with higher priority arrives in between the running process, its not stopped.
+	-- While in PE Static Priority, if a higher priority process arrives, the running process is made to wait.
+	-- If Priorities clash, ST then AT then PID resolve the decisio.
+6.	Dynamic Priority (NPE & PE seperately)
+	-- NPE Dynamic Priority is where every process gets a priority and the higher priority process goes for execution.
+	-- Even if a process with higher priority arrives in between the running process, its not stopped, but the once in the waiting queue get their priorities increased.
+	-- in PE Dynamic Priority, after the arrival of every new process, the priorities of existing process are upgraded if they have waited more than the set Threshold Time (the current process is made to wait) and then the priority check happens for selection of process to be run.
+7.	Highest Response Ratio (NPE)
+	-- In HRRN, tie resolution happens on the basis of which program has the highest response ratio (RR = (w+s)/s)
+	-- If there is a tie on RR, its resolved based on ST/AT then PID.
 
 Use one of these simulations on Files as Processes where file size shall be counted as Service Time

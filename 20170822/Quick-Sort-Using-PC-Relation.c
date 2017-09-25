@@ -1,4 +1,4 @@
-/*	C program for Merge Sort 
+/*	C program for Quick Sort 
     using Parent Child Relationship for
     divide and conquer strategy here
     using vfork*/
@@ -8,41 +8,29 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-void merge(int arr[],int l,int m,int r) //Function definition for merging two subarrays of arr[]: arr[l...m] and arr[m+1...r] with sorting in ascending order
+void swap(int *a,int *b) //function definition to swap two integers
 {
-	int i,j,k;
-	int n1=m-l+1; //length of left sub array
-	int n2=r-m; //length of right sub array
-	int L[n1],R[n2]; //Left and Right temporary arrays
-
-	for(i=0;i<n1;i++) //copying the Left array part into L[]
-		L[i]=arr[l+i];
-	for(j=0;j<n2;j++) //copying the Right array part into R[]
-		R[j]=arr[m+1+j];
-
-	// Merging the temporary arrays back into arr[l..r]
-	i=0; j=0; k=l; // Initial index of Left,Right,merged subarray
-	while(i<n1&&j<n2) //till Left or Right array's end is reached...
-	{
-		if(L[i]<=R[j]) //if current element of Left array is smaller or equal to the current of Right array...
-			arr[k++]=L[i++]; //store the current Left array element into current element of arr[] and then increment i and k
-		else //else...
-			arr[k++]=R[j++]; //store the current Right array element into current element of arr[] and then increment j and k
-	}
-
-	while(i<n1) //if there are any elements left from Left array...
-		arr[k++]=L[i++]; //copy each of them into the arr[]
-	while (j < n2) //if there are any elements left from Right array...
-		arr[k++]=R[j++]; //copy each of them into the arr[]
+	int t=*a; //temporary variable
+	*a=*b;
+	*b=t;
 }
 
-void mergeSort(int arr[], int l, int r) //function definition to divide the array into to halves and merge recursively with sorting
+int Partition(int arr[],int left,int right) //function definition to find the pivot
 {
-	if(l<r) //if the left index is smaller than right
+	int i=(left-1); //Index of smaller element which will become the pivot index later
+	for(int j=left;j<=right-1;j++) //from left to the right of array
+		if(arr[j]<=arr[right]) //if current element is smaller than pivot element (rightmost element)
+			swap(&arr[++i],&arr[j]); //swap the next i-th element with current j-th
+	swap(&arr[++i],&arr[right]); //after loop ends swap the next i-th element and the rightmost element
+	return (i); //return th epivot index
+}
+
+void QuickSort(int arr[],int left,int right) //function definition to Quick Sort
+{
+	if(left<right) //if the left index is smaller than the right
 	{
-		int m=l+(r-l)/2; //same as (l+r)/2 but avoids overflow for larger l and r
 		pid_t pid;
-		int status;
+		int status,pivot;
 		if((pid=vfork())<0) //vfork a child process & if failed...
 		{
 			printf("\t\t\t ERROR: forking child process failed \n"); //failed fork message
@@ -51,14 +39,14 @@ void mergeSort(int arr[], int l, int r) //function definition to divide the arra
 		else //else if successful...
 			if(pid==0) //for the child process...
 			{
-				mergeSort(arr,l,m); //sort the left half
-				mergeSort(arr,m+1,r); //sort the right half
+				pivot=Partition(arr,left,right); //getting pivot index by partition function
 				exit(1);
 			}
 			else //and for the parent process...
 			{
 				while(wait(&status)!=pid); //wait for completion
-				merge(arr,l,m,r); //merge these two halves
+				QuickSort(arr,left,pivot-1); //QuickSort the array left to the pivot
+				QuickSort(arr,pivot+1,right); //QuickSort the array right to the pivot
 			}
 	}
 }
@@ -84,7 +72,7 @@ int main() // main module
     printf("Given array before sorting \n"); //printing the entered unsorted array
     printArray(arr,arr_size);
 
-	mergeSort(arr,0,arr_size-1); //calling the mergesort function
+	QuickSort(arr,0,arr_size-1); //calling the quick sort function
 
 	printf("\nSorted array is \n"); //printing the sorted array
 	printArray(arr,arr_size);
