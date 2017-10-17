@@ -1,0 +1,6 @@
+Program to do the following using multi-threaded fashion and with scheduling
+1.	Matrix Multiplication
+2.	Matrix Inverse & Determinant
+3.	Merge Sort / Quick Sort
+
+Take binaries of these programs and then make a scheduler for running them in a scheduled fashion bt you, say FCFS,RR etc

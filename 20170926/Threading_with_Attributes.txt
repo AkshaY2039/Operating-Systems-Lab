@@ -1,0 +1,8 @@
+Get to know Pthread (multithreading) more...
+Problems like
+1.	sorting
+2.	binary search
+Learn about threading attributes
+1.	Scope
+2.	SCHED
+3.	Join etc
