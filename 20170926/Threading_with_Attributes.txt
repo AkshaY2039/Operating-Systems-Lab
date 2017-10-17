@@ -1,6 +1,6 @@
 Get to know Pthread (multithreading) more...
 Problems like
-1.	sorting
+1.	sum upto n
 2.	binary search
 Learn about threading attributes
 1.	Scope
