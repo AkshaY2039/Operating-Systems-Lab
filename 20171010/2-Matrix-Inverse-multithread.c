@@ -7,9 +7,13 @@
 
 #define MAX_ORDER 10
 
-int n;
+int n = 4;
 int det;
-int matrix[MAX_ORDER][MAX_ORDER];
+int matrix[MAX_ORDER][MAX_ORDER] = 
+{{1, 1, 2, 8},
+{1, 2, 4, 16},
+{2, 3, 5, 15},
+{8, 1, 2, 1}};
 int altrmatrix[MAX_ORDER][MAX_ORDER];
 float inverse[MAX_ORDER][MAX_ORDER];
 
@@ -63,16 +67,9 @@ void * cofactor(void * a)
 
 int main()
 {
-	printf("Enter the size of matrix: ");
-	scanf("%d",&n);
-	
 	pthread_t tid[n][n];
 	pthread_attr_t attr;
 	pthread_attr_init(&attr);
-
-	for (int i = 0; i < n; ++i)
-		for (int j = 0; j < n; ++j)
-			scanf("%d",&matrix[i][j]);
 
 	for (int i = 0; i < n; ++i)
 		for(int j = 0; j < n; ++j)
@@ -86,19 +83,20 @@ int main()
 		}
 
 	int new_matrix[n][n];
-	printf("\nMatrix :\n");
+	printf("\nMatrix for Inverse:\n");
 	for (int i = 0; i < n; ++i)
 	{
+		printf(" |");
 		for(int j = 0; j < n; ++j)
 		{
-			printf("%d ", matrix[i][j]);
+			printf("%6d ", matrix[i][j]);
 			new_matrix[i][j]=matrix[i][j];
 		}
-		printf("\n");
+		printf("|\n");
 	}
 	
 	int Deter = determinant(n, new_matrix);
-	printf("\nDeterminant = %d\n", Deter);
+	printf("\nDeterminant of the Matrix for Inverse = %d\n", Deter);
 	for (int i = 0; i < n; ++i)
 		for (int j = 0; j < n; ++j)
 			matrix[i][j]=altrmatrix[j][i];
@@ -107,20 +105,22 @@ int main()
 		for (int j = 0; j < n; ++j)
 			inverse[i][j]=(float)(matrix[i][j])/Deter;
 
-	printf("\nAdjoint Matrix :\n");
+	printf("\nAdjoint of the Matrix for Inverse:\n");
 	for (int i = 0; i < n; ++i)
 	{
+		printf(" |");
 		for(int j = 0; j < n; ++j)
-			printf("%d ", matrix[i][j]);
-		printf("\n");
+			printf("%6d ", matrix[i][j]);
+		printf("|\n");
 	}
 
 	printf("\nInverse Matrix :\n");
 	for (int i = 0; i < n; ++i)
 	{
+		printf(" |");
 		for(int j = 0; j < n; ++j)
-			printf("%0.8f ", inverse[i][j]);
-		printf("\n");
+			printf("%10.3f ", inverse[i][j]);
+		printf("|\n");
 	}
 
 	printf("\n");
