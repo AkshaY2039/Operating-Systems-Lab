@@ -4,14 +4,14 @@
 #include <stdlib.h>
 
 #define KNRM  "\033[0m" //RESET COLOR
-#define KRED  "\033[1;31m" //RED COLOR
+#define KYEL  "\033[1;33m" //YEL COLOR
 #define KGRN  "\033[1;32m" //GREEN COLOR
 
 void* Inverse ()
 {
 	printf(KGRN "Matrix Inverse Started ... Mapped to thread : %lu" KNRM "\n", pthread_self());
 	system("./Inverse");
-	printf(KRED "Matrix Inverse thread : %lu finished" KNRM "\n", pthread_self());
+	printf(KYEL "Matrix Inverse thread : %lu finished" KNRM "\n", pthread_self());
 	pthread_exit(0);
 }
 
@@ -19,7 +19,7 @@ void* MergeSort ()
 {
 	printf(KGRN "Merge Sort Started ... Mapped to thread : %lu" KNRM "\n", pthread_self());
 	system("./MergeSort");
-	printf(KRED "Merge Sort thread : %lu finished" KNRM "\n", pthread_self());
+	printf(KYEL "Merge Sort thread : %lu finished" KNRM "\n", pthread_self());
 	pthread_exit(0);
 }
 
@@ -27,7 +27,7 @@ void* MatMul ()
 {
 	printf(KGRN "Matrix Multiplication Started ... Mapped to thread : %lu" KNRM "\n", pthread_self());
 	system("./MatMul");
-	printf(KRED "Matrix Multiplication thread : %lu finished" KNRM "\n", pthread_self());
+	printf(KYEL "Matrix Multiplication thread : %lu finished" KNRM "\n", pthread_self());
 	pthread_exit(0);
 }
 
@@ -35,7 +35,7 @@ void* MagicSq ()
 {
 	printf(KGRN "Magic Square Started ... Mapped to thread : %lu" KNRM "\n", pthread_self());
 	system("./MagicSq");
-	printf(KRED "Magic Square thread : %lu finished" KNRM "\n", pthread_self());
+	printf(KYEL "Magic Square thread : %lu finished" KNRM "\n", pthread_self());
 	pthread_exit(0);
 }
 
@@ -43,7 +43,7 @@ void* QuickSort ()
 {
 	printf(KGRN "Quick Sort Started ... Mapped to thread : %lu" KNRM "\n", pthread_self());
 	system("./QuickSort");
-	printf(KRED "Quick Sort thread : %lu finished" KNRM "\n", pthread_self());
+	printf(KYEL "Quick Sort thread : %lu finished" KNRM "\n", pthread_self());
 	pthread_exit(0);
 }
 
