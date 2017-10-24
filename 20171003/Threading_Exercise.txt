@@ -3,3 +3,7 @@ Program to do the following using multi-threaded fashion
 2.	Matrix Inverse & Determinant
 3.	Merge Sort
 4.	Quick Sort
+
+Extra Credit:
+1.	Magic Square
+2.	Histogram

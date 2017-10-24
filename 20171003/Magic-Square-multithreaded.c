@@ -124,7 +124,6 @@ int main()
 
 	pthread_attr_t attr;
 	pthread_attr_init(&attr);
-	pthread_attr_setschedpolicy(&attr, SCHED_OTHER);
 	pthread_t make_square;
 
 	pthread_create(&make_square, NULL, populate, &n);
