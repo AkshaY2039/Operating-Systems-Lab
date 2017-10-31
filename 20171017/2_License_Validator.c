@@ -10,10 +10,6 @@
 #define KRED  "\033[1;31m" //RED COLOR
 #define KGRN  "\033[1;32m" //GREEN COLOR
 
-#define CLEAN -1
-#define WAITING 0
-#define USING 1
-
 int MAX_LIMIT;
 int Number_o_Users;
 //time_t t;

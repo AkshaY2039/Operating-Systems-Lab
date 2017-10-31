@@ -1,32 +1,39 @@
 Write programs to understand semaphore and synchronization:
-1.  Dining Philosopher
-2.  Develop a Software License Simulator using Semaphores.. Accept a maximum number of licenses (N) and grant concurrent access to a software (say binary of your previous threading exercises namely matdet or matinv) to a maximum N number of users (user threads).
-3.  Develop a solution for the sleeping TA problem (Refer Schilbertz exercise).
-4.  Banking Problem
+1.	Dining Philosopher
+2.	Develop a Software License Simulator using Semaphores.. Accept a maximum number of licenses (N) and grant concurrent access to a software (say binary of your previous threading exercises namely matdet or matinv) to a maximum N number of users (user threads).
+3.	Banking Problem : Simulate a Banking Scenario using semaphores for the following 
+		description:
+		-- Bank shall maintain an overall balance and there shall be three counters supported in the bank for credit or debit operations by customers.
+		-- Number of customers accessing counters should be dynamic. A withdrawal or credit transaction by a customer thread would update both his local account balance and a global overall bank balance.
+		-- Synchronize the balance statistic (both local and global ) to allow across account (differing account numbers / customers) and within account transactions. (Two different account withdrawals should not violate the overall balance and the order of credit / debit operations should be synchronised in the case of within account transactions.)
+		-- Differentiate multiple transactions by the same customer with a transaction id.
+		-- Also support a shared token generator for use by the counters which shall be mapped on to transaction ids/customer threads for performing the transaction.
+		-- Adopt standard banking convention such as a minimum balance for each customer and an minimum overall bank balance =	minimum balance of all customers. 
+4.	Develop a solution for the sleeping TA problem (Refer Schilbertz exercise).
 
 example source code :
 #include<stdio.h>
 #include<semaphore.h>
 #include<pthread.h>
-   
+	 
 #define N 5
 #define THINKING 0
 #define HUNGRY 1
 #define EATING 2
 #define LEFT (ph_num+4)%N
 #define RIGHT (ph_num+1)%N
-   
+	 
 sem_t mutex;
 sem_t S[N];
-   
+	 
 void * philospher(void *num);
 void take_fork(int);
 void put_fork(int);
 void test(int);
-   
+	 
 int state[N];
 int phil_num[N]={0,1,2,3,4};
-   
+	 
 int main()
 {
 	int i;
@@ -42,7 +49,7 @@ int main()
 	for(i=0;i<N;i++)
 		pthread_join(thread_id[i],NULL);
 }
-   
+	 
 void *philospher(void *num)
 {
 	while(1)
@@ -54,7 +61,7 @@ void *philospher(void *num)
 		put_fork(*i);
 	}
 }
-   
+	 
 void take_fork(int ph_num)
 {
 	sem_wait(&mutex);
@@ -63,9 +70,9 @@ void take_fork(int ph_num)
 	test(ph_num);
 	sem_post(&mutex);
 	sem_wait(&S[ph_num]);
-   // sleep(1);
+	 // sleep(1);
 }
-   
+	 
 void test(int ph_num)
 {
 	if (state[ph_num] == HUNGRY && state[LEFT] != EATING && state[RIGHT] != EATING)
@@ -77,7 +84,7 @@ void test(int ph_num)
 		sem_post(&S[ph_num]);
 	}
 }
-   
+	 
 void put_fork(int ph_num)
 {
 	sem_wait(&mutex);

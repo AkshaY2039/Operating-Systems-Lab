@@ -10,7 +10,7 @@ int main(int argc, char const *argv[])
 	else
 	{
 		int user = atoi(argv[1]);
-		int num = user%6 + 1;
+		int num = user%7 + 1;
 		printf("\033[1;3%dm \t\t _ _ _ _ _ _ Welcome to Colors, Dear User : %d _ _ _ _ _ _ " KNRM "\n", num, user);
 	}
 	return 0;
