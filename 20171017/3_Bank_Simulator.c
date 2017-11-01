@@ -22,7 +22,7 @@ double Bank_Asset = 0;
 float Balance[MAX_ACCOUNTS] = {0};
 int Lim_Customers;
 
-sem_t counter[Num_Counters], acc_mutex[MAX_ACCOUNTS];
+sem_t counter[Num_Counters], mutex[MAX_ACCOUNTS];
 
 struct txn_det
 {
@@ -36,20 +36,19 @@ void Debit(struct txn_det T)
 	sem_wait(&counter[T.Counter_Assigned]);
 	printf(KYEL "Customer : %d (TN = %lu) on counter %d, requesting Withdrawal of $ %0.2f on ACC : %d" KNRM "\n", T.Customer_No, T.Token_Number, T.Counter_Assigned, T.Txn_Amt, T.Account_Num + 1);
 	
-	sem_wait(&acc_mutex[T.Account_Num]);
+	sem_wait(&mutex[T.Account_Num]);
 	printf(KGRN "Customer : %d (TN = %lu) on counter %d, got hold of ACC : %d" KNRM "\n", T.Customer_No, T.Token_Number, T.Counter_Assigned, T.Account_Num + 1);
 	
 	if(Balance[T.Account_Num] >= T.Txn_Amt)
 	{
 		Balance[T.Account_Num] -= T.Txn_Amt;
 		Bank_Asset -= T.Txn_Amt;
-		printf(KBLU "Customer : %d (TN = %lu) on counter %d, successfully Withdrew $ %0.2f (Current Balance[%d] = $ %0.2f)" KNRM "\n", T.Customer_No, T.Token_Number, T.Counter_Assigned, T.Txn_Amt, T.Account_Num + 1, Balance[T.Account_Num]);
-		printf(KWHT "Total Bank Asset = %lf" KNRM "\n", Bank_Asset);
+		printf(KBLU "Customer : %d (TN = %lu) on counter %d, successfully Withdrew $ %0.2f (Current Balance[%d] = $ %0.2f)" KWHT "\tTotal Bank Asset = %lf" KNRM "\n", T.Customer_No, T.Token_Number, T.Counter_Assigned, T.Txn_Amt, T.Account_Num + 1, Balance[T.Account_Num], Bank_Asset);
 	}
 	else
 		printf(KRED "Customer : %d (TN = %lu) on counter %d, unsuccessful in withdrawing because (Current Balance[%d] = $ %0.2f) < (Withdrawal Amt = $ %0.2f)" KNRM "\n", T.Customer_No, T.Token_Number, T.Counter_Assigned, T.Account_Num + 1, Balance[T.Account_Num], T.Txn_Amt);
 	
-	sem_post(&acc_mutex[T.Account_Num]);
+	sem_post(&mutex[T.Account_Num]);
 	sem_post(&counter[T.Counter_Assigned]);
 	printf(KPRP "Customer : %d (TN = %lu) left the counter %d ..." KNRM "\n", T.Customer_No, T.Token_Number, T.Counter_Assigned);
 }
@@ -59,15 +58,14 @@ void Credit(struct txn_det T)
 	sem_wait(&counter[T.Counter_Assigned]);
 	printf(KYEL "Customer : %d (TN = %lu) on counter %d, requesting Deposit of $ %0.2f on ACC : %d" KNRM "\n", T.Customer_No, T.Token_Number, T.Counter_Assigned, T.Txn_Amt, T.Account_Num + 1);
 	
-	sem_wait(&acc_mutex[T.Account_Num]);
+	sem_wait(&mutex[T.Account_Num]);
 	printf(KGRN "Customer : %d (TN = %lu) on counter %d, got hold of ACC : %d" KNRM "\n", T.Customer_No, T.Token_Number, T.Counter_Assigned, T.Account_Num + 1);
 	
 		Balance[T.Account_Num] += T.Txn_Amt;
 		Bank_Asset += T.Txn_Amt;
-		printf(KBLU "Customer : %d (TN = %lu) on counter %d, successfully Deposited $ %0.2f (Current Balance[%d] = $ %0.2f)" KNRM "\n", T.Customer_No, T.Token_Number, T.Counter_Assigned, T.Txn_Amt, T.Account_Num + 1, Balance[T.Account_Num]);
-		printf(KWHT "Total Bank Asset = %lf" KNRM "\n", Bank_Asset);
+		printf(KBLU "Customer : %d (TN = %lu) on counter %d, successfully Deposited $ %0.2f (Current Balance[%d] = $ %0.2f)" KWHT "\tTotal Bank Asset = %lf" KNRM "\n", T.Customer_No, T.Token_Number, T.Counter_Assigned, T.Txn_Amt, T.Account_Num + 1, Balance[T.Account_Num], Bank_Asset);
 	
-	sem_post(&acc_mutex[T.Account_Num]);
+	sem_post(&mutex[T.Account_Num]);
 	sem_post(&counter[T.Counter_Assigned]);
 	printf(KPRP "Customer : %d (TN = %lu) left the counter %d ..." KNRM "\n", T.Customer_No, T.Token_Number, T.Counter_Assigned);
 }
@@ -97,7 +95,7 @@ int main()
 	for (i = 0; i < Num_Counters; i++)
 		sem_init(&counter[i], 0, 1);
 	for (i = 0; i < MAX_ACCOUNTS; i++)
-		sem_init(&acc_mutex[i], 0, 1);
+		sem_init(&mutex[i], 0, 1);
 	srand(time(NULL));
 	for(i = 0; i < MAX_ACCOUNTS; i++)
 	{
