@@ -43,11 +43,11 @@ void Debit(struct txn_det T)
 	{
 		Balance[T.Account_Num] -= T.Txn_Amt;
 		Bank_Asset -= T.Txn_Amt;
-		printf(KBLU "Customer : %d (TN = %lu) on counter %d, successfully Withdrew $ %0.2f (Current Balance[%d] = $ %0.2f)" KNRM "\n", T.Customer_No, T.Token_Number, T.Counter_Assigned, T.Txn_Amt, T.Account_Num, Balance[T.Account_Num]);
+		printf(KBLU "Customer : %d (TN = %lu) on counter %d, successfully Withdrew $ %0.2f (Current Balance[%d] = $ %0.2f)" KNRM "\n", T.Customer_No, T.Token_Number, T.Counter_Assigned, T.Txn_Amt, T.Account_Num + 1, Balance[T.Account_Num]);
 		printf(KWHT "Total Bank Asset = %lf" KNRM "\n", Bank_Asset);
 	}
 	else
-		printf(KRED "Customer : %d (TN = %lu) on counter %d, unsuccessful in withdrawing because (Current Balance[%d] = $ %0.2f) < (Withdrawal Amt = $ %0.2f)" KNRM "\n", T.Customer_No, T.Token_Number, T.Counter_Assigned, T.Account_Num, Balance[T.Account_Num], T.Txn_Amt);
+		printf(KRED "Customer : %d (TN = %lu) on counter %d, unsuccessful in withdrawing because (Current Balance[%d] = $ %0.2f) < (Withdrawal Amt = $ %0.2f)" KNRM "\n", T.Customer_No, T.Token_Number, T.Counter_Assigned, T.Account_Num + 1, Balance[T.Account_Num], T.Txn_Amt);
 	
 	sem_post(&acc_mutex[T.Account_Num]);
 	sem_post(&counter[T.Counter_Assigned]);
@@ -64,7 +64,7 @@ void Credit(struct txn_det T)
 	
 		Balance[T.Account_Num] += T.Txn_Amt;
 		Bank_Asset += T.Txn_Amt;
-		printf(KBLU "Customer : %d (TN = %lu) on counter %d, successfully Deposited $ %0.2f (Current Balance[%d] = $ %0.2f)" KNRM "\n", T.Customer_No, T.Token_Number, T.Counter_Assigned, T.Txn_Amt, T.Account_Num, Balance[T.Account_Num]);
+		printf(KBLU "Customer : %d (TN = %lu) on counter %d, successfully Deposited $ %0.2f (Current Balance[%d] = $ %0.2f)" KNRM "\n", T.Customer_No, T.Token_Number, T.Counter_Assigned, T.Txn_Amt, T.Account_Num + 1, Balance[T.Account_Num]);
 		printf(KWHT "Total Bank Asset = %lf" KNRM "\n", Bank_Asset);
 	
 	sem_post(&acc_mutex[T.Account_Num]);
@@ -80,16 +80,14 @@ void *Transaction(void *arg)
 	T.Counter_Assigned = rand() % Num_Counters;
 	T.Account_Num = rand() % MAX_ACCOUNTS;
 	T.Txn_Amt = (float)(rand() % (TXN_LIM * 100)) / 100;
-	while(1)
+	switch(rand() % 2)
 	{
-		switch(rand() % 2)
-		{
-			case 0:	Debit(T);
-					break;
-			case 1:	Credit(T);
-					break;
-		}
+		case 0:	Debit(T);
+				break;
+		case 1:	Credit(T);
+				break;
 	}
+	pthread_exit(0);
 }
 
 int main()
@@ -120,7 +118,7 @@ int main()
 	}
 
 	for(i = 0; i < Lim_Customers; i++)
-		pthread_join(Customers[i], NULL);
+		pthread_join(Transact[i], NULL);
 
 	return 0;
 }
