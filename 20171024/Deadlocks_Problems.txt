@@ -1,0 +1,7 @@
+1.	Simulate a Deadlock scenario using sem_wait or mutex_lock calls. Resource being attempted by n
+	processes in your setup shall be files on the hard disk.  Your code shall recover from the
+	deadlocked state by forcefully prempting the resource from a process involved in the circular
+	wait.  This should be simulated as  a blocked read/write from/ to the file being allowed to proceed
+	further to resource / process premption. 
+2.	Develop a code which simulates the deadlock detection and bankers algorithms for avoidance.
+	(this shall be in the ensuring lectures.)
