@@ -9,10 +9,9 @@
 #define KRED  "\033[1;31m" //RED COLOR
 #define KGRN  "\033[1;32m" //GREEN COLOR
 #define KYEL  "\033[1;33m" //YELLOW COLOR
-#define KBLU  "\033[1;34m" //BLUE COLOR
-#define KPRP  "\033[1;35m" //PURPLE COLOR
 #define KCYN  "\033[1;36m" //CYAN COLOR
-#define KWHT  "\033[1;37m" //WHITE COLOR
+#define KBLK  "\x1B[30m" //BLACK COLOR
+#define BRED  "\x1B[41m" //RED COLOR for Background
 
 int Number_of_chairs, TAMODE = 0;
 int Number_of_students, CHAIR;
@@ -21,6 +20,8 @@ sem_t chairs, TA;
 
 void check_TA()
 {
+	sem_getvalue(&chairs, &CHAIR);
+	printf("\t\t\t" KBLK BRED "Current number of chairs free : %d ..." KNRM "\n", CHAIR);
 	if(TAMODE == 0)
 		printf(KGRN "The TA is sleeping now ... " KNRM "\n");
 }
@@ -47,14 +48,17 @@ void WakeUpTA(int student_id)
 		TAMODE = 0;
 	
 	sem_post(&TA);
+	check_TA();
 }
 
 void *Student(void *Arg)
 {
 	int *student_id = Arg;
-	WakeUpTA(*student_id);
-	check_TA();
-	pthread_exit(0);
+	while(1)
+	{
+		WakeUpTA(*student_id);
+	}
+	// pthread_exit(0);
 }
 
 int main()
