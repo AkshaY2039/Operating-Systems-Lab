@@ -28,7 +28,7 @@ void check_TA()
 void WakeUpTA(int student_id)
 {
 	srand(time(NULL));
-	sleep(rand()%5);
+	sleep(rand()%10);
 
 	sem_wait(&chairs);
 	printf(KRED "Student %d is waiting on the chair ..." KNRM "\n", student_id);
