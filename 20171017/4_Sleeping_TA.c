@@ -37,8 +37,8 @@ void WakeUpTA(int student_id)
 	sem_post(&chairs);
 	TAMODE = 1;
 	printf(KCYN "The TA woke up for student : %d and has started teaching ..." KNRM "\n", student_id);
-	srand(time(NULL));
-	sleep(rand()%5);
+	/*srand(time(NULL));
+	sleep(rand()%5);*/
 	
 	printf(KYEL "Student %d has left ..." KNRM "\n", student_id);
 	
