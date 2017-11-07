@@ -23,7 +23,7 @@ void check_TA()
 	sem_getvalue(&chairs, &CHAIR);
 	printf("\t\t\t" KBLK BRED "Current number of chairs free : %d ..." KNRM "\n", CHAIR);
 	if(TAMODE == 0)
-		printf(KGRN "The TA is sleeping now ... " KNRM "\n");
+		printf(KGRN "\t\t\t\tThe TA is sleeping now ... " KNRM "\n");
 }
 
 void WakeUpTA(int student_id)
