@@ -29,7 +29,7 @@ void check_TA()
 void WakeUpTA(int student_id)
 {
 	srand(time(NULL));
-	sleep(rand()%10);
+	sleep(rand()%5);
 
 	sem_wait(&chairs);
 	printf(KRED "Student %d is waiting on the chair ..." KNRM "\n", student_id);
@@ -38,8 +38,8 @@ void WakeUpTA(int student_id)
 	sem_post(&chairs);
 	TAMODE = 1;
 	printf(KCYN "The TA woke up for student : %d and has started teaching ..." KNRM "\n", student_id);
-	/*srand(time(NULL));
-	sleep(rand()%5);*/
+	srand(time(NULL));
+	sleep(rand()%2);
 	
 	printf(KYEL "Student %d has left ..." KNRM "\n", student_id);
 	
@@ -48,7 +48,6 @@ void WakeUpTA(int student_id)
 		TAMODE = 0;
 	
 	sem_post(&TA);
-	check_TA();
 }
 
 void *Student(void *Arg)
@@ -57,6 +56,7 @@ void *Student(void *Arg)
 	while(1)
 	{
 		WakeUpTA(*student_id);
+		check_TA();
 	}
 	// pthread_exit(0);
 }
